@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react'
 import styles from './Chatbot.module.css'
 
@@ -17,13 +18,14 @@ const RULES: [string[], string][] = [
 async function getBotReply(input: string): Promise<string> {
   const lower = input.toLowerCase()
 
-  // Rule-based first
+  // 🔥 Rule-based first
+  for (const [keywords, reply] of RULES) {
+    if (keywords.some(k => lower.includes(k))) {
+      return reply
+    }
+  }
 
-    if (["hi", "hello", "hey"].includes(lower.trim())) {
-      return "Hello! 👋 I'm your HealthConnect assistant. How can I help you today?"
-     }
-
-  // AI fallback
+  // 🔥 AI fallback
   try {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/chat`, {
       method: "POST",
@@ -32,6 +34,10 @@ async function getBotReply(input: string): Promise<string> {
       },
       body: JSON.stringify({ message: input })
     })
+
+    if (!res.ok) {
+      throw new Error("API request failed")
+    }
 
     const data = await res.json()
     return data.reply || "Sorry, I couldn't understand that."
@@ -174,3 +180,4 @@ export default function Chatbot() {
     </>
   )
 }
+
