@@ -18,15 +18,14 @@ async function getBotReply(input: string): Promise<string> {
   const lower = input.toLowerCase()
 
   // Rule-based first
-  for (const [keywords, reply] of RULES) {
-      if (["hi", "hello", "hey"].includes(lower.trim())) {
+
+    if (["hi", "hello", "hey"].includes(lower.trim())) {
       return "Hello! 👋 I'm your HealthConnect assistant. How can I help you today?"
-    }
-  }
+     }
 
   // AI fallback
   try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
